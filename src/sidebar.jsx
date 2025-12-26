@@ -2,6 +2,7 @@ import "./sidebar.css";
 import { useContext, useEffect } from "react";
 import { MyContext } from "./myContext.jsx";
 import {v1 as uuidv1} from "uuid";
+import logo from "./assets/ec-logo.png";
 
 function Sidebar() {
     const {allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats} = useContext(MyContext);
@@ -63,7 +64,7 @@ function Sidebar() {
             console.log(err);
         }
     }
-
+      
     return (
         <section className="sidebar">
             <button onClick={createNewChat}>
