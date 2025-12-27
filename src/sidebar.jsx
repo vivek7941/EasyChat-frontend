@@ -7,13 +7,13 @@ import logo from "./assets/ec-logo.png";
 function Sidebar() {
     const { allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats } = useContext(MyContext);
 
-    // Live Render URL
-    const API_URL = "https://easychat-4uo9.onrender.com/api/thread";
+    // Added a trailing slash to match your app.use("/api/thread", chatRoutes) setup
+    const API_URL = "https://easychat-4uo9.onrender.com/api/thread/";
 
     const getAllThreads = async () => {
         try {
             const response = await fetch(API_URL); 
-            // If the fetch fails, we simply do nothing so no error message appears
+            // If server is not ready, exit quietly. No error message will be shown.
             if (!response.ok) return; 
 
             const res = await response.json();
@@ -26,8 +26,8 @@ function Sidebar() {
                 setAllThreads(filteredData);
             }
         } catch (err) {
-            // Error is logged only to console, keeping the UI clean
-            console.log("Connecting to server..."); 
+            // Logs to console for debugging, but keeps the Sidebar UI clean
+            console.log("Syncing with server..."); 
         }
     };
 
@@ -49,7 +49,7 @@ function Sidebar() {
         setCurrThreadId(newThreadId);
         setPrevChats([]); 
         try {
-            const response = await fetch(`${API_URL}/${newThreadId}`);
+            const response = await fetch(`${API_URL}${newThreadId}`);
             if (!response.ok) return;
             const res = await response.json();
             
@@ -57,16 +57,16 @@ function Sidebar() {
             setNewChat(false); 
             setReply(null); 
         } catch (err) {
-            console.log("Error loading thread:", err);
+            console.log("Thread switch failed silently.");
         }
     };
 
     const deleteThread = async (threadId) => {
         try {
-            const response = await fetch(`${API_URL}/${threadId}`, { method: "DELETE" });  
+            const response = await fetch(`${API_URL}${threadId}`, { method: "DELETE" });  
             if (!response.ok) return;
             
-            // Remove from UI immediately after deletion
+            // Instantly remove from UI
             setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId));
             
             if (threadId === currThreadId) {
@@ -88,8 +88,7 @@ function Sidebar() {
                     <i className="fa-solid fa-pen-to-square"></i>
                 </button>
 
-                {/* Removed the error div entirely from here */}
-
+                {/* The history list renders only when data exists, no error divs here */}
                 <ul className="history">
                     {allThreads?.map((thread) => (
                         <li key={thread.threadId}
