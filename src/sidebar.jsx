@@ -23,21 +23,18 @@ function Sidebar() {
         }
     };
 
-   
     useEffect(() => {
         getAllThreads();
-    }, []); 
-
+    }, []);  // Running once on mount to fetch all threads
 
     const createNewChat = () => {
         setNewChat(true);
         setPrompt("");
         setReply(null);
-        setCurrThreadId(uuidv1()); 
-        setPrevChats([]); 
+        setCurrThreadId(uuidv1()); // Creates a new thread ID
+        setPrevChats([]); // Clear previous chats
     };
 
-    
     const changeThread = async (newThreadId) => {
         setCurrThreadId(newThreadId);
         setPrevChats([]); 
@@ -46,7 +43,7 @@ function Sidebar() {
             const response = await fetch(`${API_URL}/${newThreadId}`);
             if (!response.ok) throw new Error("Failed to fetch the thread.");
             const res = await response.json();
-            setPrevChats(res);
+            setPrevChats(res); // Set the previous chats for the selected thread
             setNewChat(false); 
             setReply(null); 
         } catch (err) {
@@ -55,7 +52,6 @@ function Sidebar() {
         }
     };
 
- 
     const deleteThread = async (threadId) => {
         try {
             const response = await fetch(`${API_URL}/${threadId}`, { method: "DELETE" });
@@ -63,10 +59,10 @@ function Sidebar() {
             const res = await response.json();
             console.log(res);
 
-           
+            // Updated threads re-render
             setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId));
 
-          
+            // Reset to a new chat if the current thread is deleted
             if (threadId === currThreadId) {
                 createNewChat();
             }
@@ -96,7 +92,7 @@ function Sidebar() {
                             {thread.title}
                             <i className="fa-solid fa-trash"
                                 onClick={(e) => {
-                                    e.stopPropagation(); 
+                                    e.stopPropagation(); // Stop event bubbling to prevent triggering changeThread
                                     deleteThread(thread.threadId);
                                 }}
                             ></i>
@@ -106,10 +102,11 @@ function Sidebar() {
             </ul>
 
             <div className="sign">
-                <p>By Vivek !</p>
+                <p>By Vivek!</p>
             </div>
         </section>
     );
 }
 
 export default Sidebar;
+
