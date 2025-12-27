@@ -25,7 +25,7 @@ function ChatWindow() {
         setNewChat(false);
 
         try {
-            const response = await fetch("http://localhost:8080/api/chat", {
+            const response = await fetch("https://easychat-backend-1qag.onrender.com/api/thread", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -33,7 +33,7 @@ function ChatWindow() {
                     threadId: currThreadId
                 })
             });
-
+    
             const res = await response.json();
             setReply(res.reply);
         } catch (err) {
