@@ -8,12 +8,11 @@ function Sidebar() {
     const { allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats } = useContext(MyContext);
     const [error, setError] = useState(""); 
 
-    const API_URL = "https://easychat-4uo9.onrender.com";
- 
+    const API_URL = "https://easychat-4uo9.onrender.com/api/chat";  
 
     const getAllThreads = async () => {
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch(`${API_URL}/threads`);  
             if (!response.ok) throw new Error("Failed to fetch threads.");
             const res = await response.json();
             const filteredData = res.map(thread => ({ threadId: thread.threadId, title: thread.title }));
@@ -26,14 +25,14 @@ function Sidebar() {
 
     useEffect(() => {
         getAllThreads();
-    }, []);  // Running once on mount to fetch all threads
+    }, []);  
 
     const createNewChat = () => {
         setNewChat(true);
         setPrompt("");
         setReply(null);
-        setCurrThreadId(uuidv1()); // Creates a new thread ID
-        setPrevChats([]); // Clear previous chats
+        setCurrThreadId(uuidv1()); 
+        setPrevChats([]);
     };
 
     const changeThread = async (newThreadId) => {
@@ -41,10 +40,10 @@ function Sidebar() {
         setPrevChats([]); 
 
         try {
-            const response = await fetch(`${API_URL}/${newThreadId}`);
+            const response = await fetch(`${API_URL}/${newThreadId}`); 
             if (!response.ok) throw new Error("Failed to fetch the thread.");
             const res = await response.json();
-            setPrevChats(res); // Set the previous chats for the selected thread
+            setPrevChats(res); 
             setNewChat(false); 
             setReply(null); 
         } catch (err) {
@@ -55,15 +54,15 @@ function Sidebar() {
 
     const deleteThread = async (threadId) => {
         try {
-            const response = await fetch(`${API_URL}/${threadId}`, { method: "DELETE" });
+            const response = await fetch(`${API_URL}/${threadId}`, { method: "DELETE" });  // Corrected URL
             if (!response.ok) throw new Error("Failed to delete thread.");
             const res = await response.json();
             console.log(res);
 
-            // Updated threads re-render
+           
             setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId));
 
-            // Reset to a new chat if the current thread is deleted
+           
             if (threadId === currThreadId) {
                 createNewChat();
             }
@@ -93,7 +92,7 @@ function Sidebar() {
                             {thread.title}
                             <i className="fa-solid fa-trash"
                                 onClick={(e) => {
-                                    e.stopPropagation(); // Stop event bubbling to prevent triggering changeThread
+                                    e.stopPropagation(); 
                                     deleteThread(thread.threadId);
                                 }}
                             ></i>
@@ -110,4 +109,6 @@ function Sidebar() {
 }
 
 export default Sidebar;
+``
+
 
