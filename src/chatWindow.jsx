@@ -25,7 +25,7 @@ function ChatWindow() {
         setNewChat(false);
 
         try {
-            const response = await fetch("https://easychat-4uo9.onrender.com", {
+            const response = await fetch("https://easychat-4uo9.onrender.com/api/chat", { 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -33,7 +33,7 @@ function ChatWindow() {
                     threadId: currThreadId
                 })
             });
-    
+
             const res = await response.json();
             setReply(res.reply);
         } catch (err) {
@@ -61,9 +61,7 @@ function ChatWindow() {
     return (
         <div className="chatWindow">
             <div className="navbar">
-                <span>
-                    EasyChat !
-                </span>
+                <span>EasyChat !</span>
 
                 <div className="userIconDiv" onClick={handleProfileClick}>
                     <span className="userIcon">
