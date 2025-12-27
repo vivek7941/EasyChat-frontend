@@ -8,7 +8,7 @@ function Sidebar() {
     const { allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats } = useContext(MyContext);
     const [error, setError] = useState(""); 
 
-    const API_URL = "https://easychat-4uo9.onrender.com/api/thread";  
+    const API_URL = "https://easychat-4uo9.onrender.com/api";  
 
     const getAllThreads = async () => {
         try {
@@ -40,7 +40,7 @@ function Sidebar() {
         setPrevChats([]); 
 
         try {
-            const response = await fetch(`${API_URL}/${newThreadId}`); 
+             const response = await fetch(`${API_URL}/thread/${newThreadId}`);
             if (!response.ok) throw new Error("Failed to fetch the thread.");
             const res = await response.json();
             setPrevChats(res); 
@@ -54,7 +54,7 @@ function Sidebar() {
 
     const deleteThread = async (threadId) => {
         try {
-            const response = await fetch(`${API_URL}/${threadId}`, { method: "DELETE" });  // Corrected URL
+            const response = await fetch(`${API_URL}/thread/${threadId}`, { method: "DELETE" });  // Corrected URL
             if (!response.ok) throw new Error("Failed to delete thread.");
             const res = await response.json();
             console.log(res);
