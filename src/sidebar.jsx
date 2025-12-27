@@ -6,15 +6,16 @@ import logo from "./assets/ec-logo.png";
 
 function Sidebar() {
     const { allThreads, setAllThreads, currThreadId, setNewChat, setPrompt, setReply, setCurrThreadId, setPrevChats } = useContext(MyContext);
-    const [error, setError] = useState(""); 
+    // Removed the error state that was showing "Error fetching threads"
 
     const API_URL = "https://easychat-4uo9.onrender.com/api/thread";
 
     const getAllThreads = async () => {
         try {
-            setError("");
             const response = await fetch(API_URL); 
-            if (!response.ok) throw new Error("Failed to fetch threads.");
+            // If the backend is slow or "asleep", we just return silently instead of showing an error
+            if (!response.ok) return; 
+
             const res = await response.json();
             
             if (Array.isArray(res)) {
@@ -25,9 +26,8 @@ function Sidebar() {
                 setAllThreads(filteredData);
             }
         } catch (err) {
-            // Keep error empty if you don't want to see the text on screen
-            setError(""); 
-            console.log("Server waking up...");
+            // Silencing the UI error for a smoother experience
+            console.log("Syncing history..."); 
         }
     };
 
@@ -44,28 +44,29 @@ function Sidebar() {
     };
 
     const changeThread = async (newThreadId) => {
-        if(newThreadId === currThreadId) return; // Don't reload if already on this thread
+        if(newThreadId === currThreadId) return;
         
         setCurrThreadId(newThreadId);
         setPrevChats([]); 
         try {
             const response = await fetch(`${API_URL}/${newThreadId}`);
-            if (!response.ok) throw new Error("Failed to fetch the thread.");
+            if (!response.ok) return;
             const res = await response.json();
             
             setPrevChats(res.messages || res); 
             setNewChat(false); 
             setReply(null); 
         } catch (err) {
-            console.log(err);
+            console.log("Error loading thread:", err);
         }
     };
 
     const deleteThread = async (threadId) => {
         try {
             const response = await fetch(`${API_URL}/${threadId}`, { method: "DELETE" });  
-            if (!response.ok) throw new Error("Failed to delete.");
+            if (!response.ok) return;
             
+            // Instantly remove from UI
             setAllThreads(prev => prev.filter(thread => thread.threadId !== threadId));
             
             if (threadId === currThreadId) {
@@ -97,7 +98,7 @@ function Sidebar() {
                             <span className="title-text">{thread.title}</span>
                             <i className="fa-solid fa-trash"
                                 onClick={(e) => {
-                                    e.stopPropagation(); 
+                                    e.stopPropagation(); // Prevents opening the chat when deleting
                                     deleteThread(thread.threadId);
                                 }}
                             ></i>
