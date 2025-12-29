@@ -30,11 +30,11 @@ function Chat() {
         }, 40);
 
         return () => clearInterval(interval);
-    }, [reply, prevChats]); // Removed unnecessary dependencies
+    }, [reply, prevChats]); 
 
     return (
         <div className="chats">
-            {newChat && <h1 className="welcome-text">Ready when you are</h1>}
+            {newChat && <h1 className="welcome-text"> Ready when you are</h1>}
             
             {prevChats?.map((chat, idx) => {
                 const isLast = idx === prevChats.length - 1;
