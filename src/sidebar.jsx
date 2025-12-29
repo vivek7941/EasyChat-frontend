@@ -49,7 +49,7 @@ function Sidebar() {
         setCurrThreadId(newThreadId);
         setPrevChats([]); 
         try {
-            const response = await fetch(`${API_URL}${newThreadId}`);
+            const response = await fetch(`${API_URL}/${newThreadId}`);
             if (!response.ok) return;
             const res = await response.json();
             
@@ -63,7 +63,7 @@ function Sidebar() {
 
     const deleteThread = async (threadId) => {
         try {
-            const response = await fetch(`${API_URL}${threadId}`, { method: "DELETE" });  
+            const response = await fetch(`${API_URL}/${threadId}`, { method: "DELETE" });
             if (!response.ok) return;
             
             // Instantly remove from UI
