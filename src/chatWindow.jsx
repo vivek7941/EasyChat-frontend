@@ -25,22 +25,34 @@ function ChatWindow() {
         setNewChat(false);
 
         try {
-                const response = await fetch("https://easychat-4uo9.onrender.com/api/thread", {
+          
+            const response = await fetch("https://easychat-4uo9.onrender.com/api/thread", { 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                message: prompt,
-                threadId: currThreadId
+                    message: prompt,
+                    threadId: currThreadId
                 })
             });
 
-            const res = await response.json();
-            setReply(res.reply);
-        } catch (err) {
-            console.error(err);
-        }
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
 
-        setLoading(false);
+            const res = await response.json();
+            
+           
+            if (res.reply) {
+                setReply(res.reply);
+            } else if (res.message) {
+                setReply(res.message);
+            }
+        } catch (err) {
+            console.error("Chat Error:", err);
+          
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -86,7 +98,9 @@ function ChatWindow() {
 
             <Chat />
 
-            <ScaleLoader color="#fff" loading={loading} />
+            <div className="loader-container">
+                <ScaleLoader color="#fff" loading={loading} />
+            </div>
 
             <div className="chatInput">
                 <div className="inputBox">
