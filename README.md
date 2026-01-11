@@ -21,8 +21,12 @@ https://easy-chat-git-master-vivek7941s-projects.vercel.app
 ## Setup
 
 Install dependencies:
+```bash
 npm install
+```
 
 Run:
-npm run dev or npm start 
+```bash
+npm start
+```
 
