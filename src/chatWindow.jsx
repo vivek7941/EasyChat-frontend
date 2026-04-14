@@ -23,16 +23,16 @@ function ChatWindow() {
 
         setLoading(true);
         setNewChat(false);
-
-        try {
-            const response = await fetch("https://easychat-4uo9.onrender.com/api/thread", { 
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    message: prompt,
-                    threadId: currThreadId
-                })
-            });
+        
+     try {
+         const response = await fetch("https://easychat-4uo9.onrender.com/api/thread/", { 
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                message: prompt,
+                threadId: currThreadId
+            })
+        });
 
             if (!response.ok) {
                 throw new Error(`Server error: ${response.status}`);
