@@ -3,7 +3,7 @@
 AI chatbot application powered by Google Gemini API.
 
 ## Live Demo
-https://easy-chat-git-master-vivek7941s-projects.vercel.app
+https://easychat-plum.vercel.app/
 
 ## Features
 - AI-powered conversations using Google Gemini
